@@ -43,37 +43,6 @@ public class TransactionController {
         return (List<Transaction>) transactionRepository.findAll();
     }
 
-/*    @PutMapping("/transaction/{id}")
-    public ResponseEntity<Transaction> updateTransaction(@PathVariable("id") String id, @RequestBody Transaction transaction) {
-        Transaction transactionData = transactionRepository.findOne(id);
-        if (transaction == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        transactionData.setStatus(transaction.getStatus());
-        Transaction updatedtransaction = transactionRepository.save(transactionData);
-        *//*Transaction transactionDataPut = transactionRepository.findById(request.getId());
-        List<TransData> transactionPut = transactionData.getTranscData();
-        if(transactionData.getStatus().equals("REJECTED")){
-                for (int i = 0; i < transaction.size(); i++) {
-                    if (transaction.get(i).getInventoryId().equals(inventoryData.getInventoryId())) {
-                        inventoryData.setAvailable(inventoryData.getAvailable() + transaction.get(i).getQty());
-                        inventoryRepository.save(inventoryData);
-
-                        t.setSuccess("Transaction REJECTED");
-                        return t; }
-                    else {
-                        t.setSuccess("ITEM/s NOT FOUND");
-                        return t; }
-                }
-            }
-            else {
-                t.setSuccess("Employee Not Found");
-                return t;
-            }
-        }//
-        return new ResponseEntity<>(updatedtransaction, HttpStatus.OK);
-    }*/
-
     @PostMapping("/transaction/List")
     public Transaction createTransaction(@RequestBody Transaction transaction) {
         transactionRepository.save(transaction);
@@ -105,12 +74,6 @@ public class TransactionController {
                 if (transaction==null){
                     return null;
                 }
-               /* if (transactions.get(i).getInventoryId().equals(employeeData.getEmplItems().get(i).getInventoryId())){
-                    empItems.get(i).setQty(empItems.get(i).getQty()+transactions.get(i).getQty());
-                    employeeRepository.save(employeeData);
-                    inventoryRepository.save(inventoryData2);
-                    transactionRepository.save(transaction);
-                }*/
                 else{
                     EmployeeItems a = new EmployeeItems();
                     InventoryUsers b = new InventoryUsers();
@@ -154,6 +117,7 @@ public class TransactionController {
         System.out.println(employeeData.getEmplItems());
         List<InventoryUsers> invenUser2=inventoryData.getInvenUsers();
 
+
         if (transaction == null) {
             t.setSuccess("Transaction NULL");
             return t;
@@ -162,12 +126,12 @@ public class TransactionController {
             if (employeeData.getEmail().equals(request.getEmail())){
                 for (int i = 0; i < transaction.size(); i++) {
                     if (transaction.get(i).getInventoryId().equals(inventoryData.getInventoryId())) {
-                        inventoryData.setAvailable(inventoryData.getAvailable() + transaction.get(i).getQty());
-                        transactionData.setStatus("REJECTED");
-                        inventoryRepository.save(inventoryData);
-                        transactionRepository.save(transactionData);
-                        t.setSuccess("Transaction REJECTED");
-                    }
+                            inventoryData.setAvailable(inventoryData.getAvailable() + transaction.get(i).getQty());
+                            transactionData.setStatus("REJECTED");
+                            inventoryRepository.save(inventoryData);
+                            transactionRepository.save(transactionData);
+                            t.setSuccess("Transaction REJECTED");
+                            }
                     else {
                         t.setSuccess("ITEM/s NOT FOUND");
                     }
@@ -178,8 +142,8 @@ public class TransactionController {
                 return t;
             }
         }
-        else if (request.getStatus().equals("APPROVED")){
-            for (int i=0;i<transaction.size();i++){
+        else if (request.getStatus().equals("APPROVED")) {
+            for (int i = 0; i < transaction.size(); i++) {
                 EmployeeItems a = new EmployeeItems();
                 InventoryUsers b = new InventoryUsers();
                 a.setQty(transaction.get(i).getQty());
@@ -191,21 +155,20 @@ public class TransactionController {
                 inventoryRepository.save(inventoryData);
                 transactionRepository.save(transactionData);
             }
-        }
-        for(int i=0;i<1;i++){
-            InventoryUsers b = new InventoryUsers();
-            b.setEmail(request.getEmail());
-            b.setQty(transaction.get(i).getQty());
-            invenUser2.add(b);
-            employeeRepository.save(employeeData);
-            inventoryRepository.save(inventoryData);
-            transactionRepository.save(transactionData);
-        }
+            for (int i = 0; i < 1; i++) {
+                InventoryUsers b = new InventoryUsers();
+                b.setEmail(request.getEmail());
+                b.setQty(transaction.get(i).getQty());
+                invenUser2.add(b);
+                employeeRepository.save(employeeData);
+                inventoryRepository.save(inventoryData);
+                transactionRepository.save(transactionData);
+            }
 
-        t.setSuccess("Transaction FAILED");
+            t.setSuccess("Transaction FAILED");
+        }
         return t;
     }
-
 
     @PutMapping(value = "/transaction/return", produces = MediaType.APPLICATION_JSON_VALUE)
     public TransactionResponse returned(@RequestBody TransactionRequest request) {
@@ -214,20 +177,19 @@ public class TransactionController {
         Inventory inventoryData = inventoryRepository.findByInventoryId(request.getInventoryId());
         Transaction transactionData = transactionRepository.findById(request.getId());
         List<TransData> transaction = transactionData.getTranscData();
-
+        List<InventoryUsers> invenUsers=inventoryData.getInvenUsers();
 
         if (employeeData.getEmail().equals(request.getEmail())){
             for (int i = 0; i < transaction.size(); i++) {
                 if (transaction.get(i).getInventoryId().equals(inventoryData.getInventoryId())) {
                     inventoryData.setAvailable(inventoryData.getAvailable() + transaction.get(i).getQty());
-                    Update updateObj = new Update()
-                            .pull("emplItems", new BasicDBObject("emplItems.inventoryId",request.getInventoryId()));
-                    System.out.println("UPDATE OBJ: " + updateObj.toString());
+//                    invenUsers.get(i).setQty(0);
+                    invenUsers.get(i).setEmail(request.getEmail()+" (RETURNED)");
                     transactionData.setStatus("RETURNED");
                     transactionRepository.save(transactionData);
                     inventoryRepository.save(inventoryData);
                     t.setSuccess("Transaction RETURNED");
-                    return t; }
+                    }
                 else {
                     t.setSuccess("ITEM/s NOT FOUND");
                     return t; }
@@ -242,20 +204,3 @@ public class TransactionController {
     }
 }
 
-
-/* transactionRepository.save(transaction);
-        Transaction transactionData = transactionRepository.findById(transaction.getId());
-        List<TransData> reduce = transactionData.getTranscData();
-        transactionData.setStatus("Pending");
-        for (int i = 0; i < reduce.size(); i++) {
-            Inventory inventoryData = inventoryRepository.findByInventoryId(reduce.get(i).getInventoryId());
-            if (reduce.get(i).getInventoryId().equals(inventoryData.getInventoryId())){
-                inventoryData.setStock(reduce.get(i).getQty());
-                System.out.println(inventoryData.getStock());
-                System.out.println(reduce.get(i).getQty());
-                System.out.println("MASUKKKKKK");
-            }
-            else {
-                return null;
-            }
-        }*/
