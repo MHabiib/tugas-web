@@ -1,0 +1,68 @@
+.menu {
+    cursor: pointer;
+}
+
+.menu-container{
+    margin-top: 23px;
+}
+
+.menu-container .menu{
+    width: 80%;
+    height: 52px;
+    border-radius: 5px;
+    margin: 16px auto;
+    padding-top: 22px;
+    box-sizing: border-box;
+    font-size: 15px;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.45;
+    letter-spacing: normal;
+    color: #a9afbb;
+}
+
+.menu-container .active{
+    background-color: rgb(32, 136, 203);
+    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.35);
+    color: rgb(244, 247, 249);
+}
+
+.divider{
+    width: 75%;
+    height: 2px;
+    opacity: 0.2;
+}
+
+.sidebar {
+    width: 20%;
+    box-shadow: 0 2px 18px 0 rgba(0, 0, 0, 0.35);
+    text-align: center;
+    display: inline-block;
+    min-height: 626px;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    width: 55%;
+    margin: 27px 0 20px 0;
+}
+
+.logoutBtn {
+    width: 230px;
+    height: 52px;
+    border-radius: 5px;
+    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.35);
+    background-color: #797b7d;
+}
+
+.logoutContainer {
+    margin-top: 155px;
+}
+
+.tulisanLogout {
+    text-decoration: none;
+    color: rgb(244, 247, 249);
+}
